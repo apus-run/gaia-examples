@@ -12,6 +12,8 @@ import (
 	"github.com/apus-run/gaia/transport/grpc"
 	"github.com/apus-run/gaia/transport/http"
 	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 var (
@@ -20,6 +22,11 @@ var (
 	// Version is the version of the compiled software.
 	Version = "v1.0.0"
 )
+
+type User struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
 
 // server is used to implement helloworld.GreeterServer.
 type server struct {
@@ -34,18 +41,44 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 	return &pb.HelloReply{Message: fmt.Sprintf("Hello %+v", in.Name)}, nil
 }
 
+func Hello(c *gin.Context) {
+	c.JSON(hp.StatusOK, gin.H{
+		"message": "pong",
+	})
+}
+
 func NewRouter() *gin.Engine {
 	g := gin.New()
 	// 使用中间件
 	g.Use(gin.Recovery())
 
-	g.GET("/ping", func(c *gin.Context) {
-		c.JSON(hp.StatusOK, gin.H{
-			"message": "pong",
-		})
+	g.GET("/", func(c *gin.Context) {
+		c.String(hp.StatusOK, "ok")
 	})
 
+	g.GET("/hello", Hello)
+
 	return g
+}
+
+func NewEchoRouter() *echo.Echo {
+	e := echo.New()
+
+	e.Use(middleware.Recover())
+
+	e.GET("/", func(c echo.Context) error {
+		return c.String(hp.StatusOK, "Hello, World!")
+	})
+
+	e.GET("/hello", func(c echo.Context) error {
+		u := &User{
+			Name:  "Kami",
+			Email: "Kami@moocss.com",
+		}
+		return c.JSON(hp.StatusOK, u)
+	})
+
+	return e
 }
 
 func main() {
@@ -74,6 +107,9 @@ func main() {
 
 	router := NewRouter()
 	httpServer.Handler = router
+
+	//router := NewEchoRouter()
+	//httpServer.Handler = router
 
 	app := gaia.New(
 		gaia.WithName(Name),

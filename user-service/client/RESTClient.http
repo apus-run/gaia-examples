@@ -1,0 +1,9 @@
+
+### 用户添加
+POST http://localhost:8000/user HTTP/1.1
+content-type: application/json
+
+{
+    "username": "admin",
+    "email": "admin@163.com"
+}

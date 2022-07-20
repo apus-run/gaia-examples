@@ -22,13 +22,11 @@ func runGrpc() {
 		),
 	)
 	if err != nil {
-		panic(err)
+		log.Fatalf("did not connect: %v", err)
 	}
-	defer func() {
-		if err := conn.Close(); err != nil {
-			panic(err)
-		}
-	}()
+
+	defer conn.Close()
+
 	client := pb.NewGreeterClient(conn)
 	reply, err := client.SayHello(context.Background(), &pb.HelloRequest{Name: "gaia"})
 	if err != nil {
