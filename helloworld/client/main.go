@@ -5,6 +5,7 @@ import (
 	"log"
 
 	pb "github.com/apus-run/gaia/examples/helloworld/api"
+	"github.com/apus-run/gaia/middleware/recovery"
 	"github.com/apus-run/gaia/transport/grpc"
 )
 
@@ -16,6 +17,9 @@ func runGrpc() {
 	conn, err := grpc.DialInsecure(
 		context.Background(),
 		grpc.WithEndpoint("127.0.0.1:9000"),
+		grpc.WithMiddleware(
+			recovery.Recovery(),
+		),
 	)
 	if err != nil {
 		panic(err)
