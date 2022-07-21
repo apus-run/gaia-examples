@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/apus-run/gaia"
 	pb "github.com/apus-run/gaia/examples/user-service/api"
+	"github.com/apus-run/gaia/examples/user-service/pkg"
 	"github.com/apus-run/gaia/log"
 	"github.com/apus-run/gaia/middleware/recovery"
 	grpcserver "github.com/apus-run/gaia/transport/grpc"
@@ -111,8 +113,8 @@ func createUser(c *gin.Context) {
 
 func NewRouter() *gin.Engine {
 	g := gin.New()
-	// 使用中间件
-	g.Use(gin.Recovery())
+	// 使用gaia中间件
+	g.Use(pkg.Middlewares(recovery.Recovery()))
 
 	g.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "ok")
@@ -129,12 +131,13 @@ func main() {
 	// http server
 	httpServer := httpserver.NewServer(
 		httpserver.Address(":8000"),
-		httpserver.Middleware(
-			recovery.Recovery(),
-		),
+		//httpserver.Middleware(
+		//	recovery.Recovery(),
+		//),
 	)
-
+	gin.SetMode("release")
 	router := NewRouter()
+
 	httpServer.Handler = router
 
 	app := gaia.New(
