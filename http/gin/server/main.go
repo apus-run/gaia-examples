@@ -2,8 +2,12 @@ package main
 
 import (
 	"github.com/apus-run/gaia"
+	consulclient "github.com/apus-run/gaia/examples/http/gin/discovery/consul"
 	"github.com/apus-run/gaia/log"
+	"github.com/apus-run/gaia/plugins/registry/consul"
+	"github.com/apus-run/gaia/registry"
 	grpcserver "github.com/apus-run/gaia/transport/grpc"
+	"time"
 
 	pb "github.com/apus-run/gaia/examples/http/gin/proto"
 	"github.com/apus-run/gaia/examples/http/gin/server/service"
@@ -34,6 +38,20 @@ func NewGRPCServer(svc *service.UserServiceServer) *grpcserver.Server {
 	return grpcServer
 }
 
+func getConsulRegistry() registry.Registry {
+	client, err := consulclient.New(&consulclient.Config{
+		Address:    "127.0.0.1:8500",
+		Scheme:     "http",
+		Datacenter: "",
+		WaitTime:   5 * time.Millisecond,
+		Namespace:  "",
+	})
+	if err != nil {
+		panic(err)
+	}
+	return consul.New(client)
+}
+
 func main() {
 	userServiceServer := service.NewUserServiceServer()
 	gs := NewGRPCServer(userServiceServer)
@@ -45,6 +63,7 @@ func main() {
 		gaia.WithServer(
 			gs,
 		),
+		gaia.WithRegistry(getConsulRegistry()),
 	)
 
 	if err := app.Run(); err != nil {

@@ -13,7 +13,7 @@ POST http://localhost:8000/v1/auth/register HTTP/1.1
 content-type: application/json
 
 {
-  "username": "Hello",
-  "email": "Hello",
-  "password": "Hello"
+  "username": "moocss",
+  "email": "moocss@163.com",
+  "password": "123456"
 }

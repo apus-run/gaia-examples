@@ -3,16 +3,20 @@ package main
 import (
 	"context"
 	"net/http"
+	"time"
 
 	"github.com/apus-run/gaia"
 	"github.com/apus-run/gaia/log"
 	"github.com/apus-run/gaia/middleware"
 	"github.com/apus-run/gaia/middleware/recovery"
 	"github.com/apus-run/gaia/pkg/xgin"
+	"github.com/apus-run/gaia/plugins/registry/consul"
+	"github.com/apus-run/gaia/registry"
 	grpcserver "github.com/apus-run/gaia/transport/grpc"
 	httpserver "github.com/apus-run/gaia/transport/http"
 	"github.com/gin-gonic/gin"
 
+	consulclient "github.com/apus-run/gaia/examples/http/gin/discovery/consul"
 	pb "github.com/apus-run/gaia/examples/http/gin/proto"
 	"github.com/apus-run/gaia/examples/http/gin/web/service"
 )
@@ -24,11 +28,7 @@ var (
 	Version = "v1.0.0"
 )
 
-var (
-	UserServiceServerClient pb.UserServiceClient
-)
-
-func ConnectGrpcServer() {
+func ConnectGrpcServer() pb.UserServiceClient {
 	conn, err := grpcserver.DialInsecure(
 		context.Background(),
 		grpcserver.WithEndpoint("127.0.0.1:9000"),
@@ -40,7 +40,9 @@ func ConnectGrpcServer() {
 		log.Fatalf("did not connect: %v", err)
 	}
 
-	UserServiceServerClient = pb.NewUserServiceClient(conn)
+	c := pb.NewUserServiceClient(conn)
+
+	return c
 }
 
 func customMiddleware(handler middleware.Handler) middleware.Handler {
@@ -83,9 +85,41 @@ func NewHTTPServer(userSvc *service.UserServiceServer) *httpserver.Server {
 	return httpServer
 }
 
+func getConsulDiscovery() registry.Discovery {
+	client, err := consulclient.New(&consulclient.Config{
+		Address:    "127.0.0.1:8500",
+		Scheme:     "http",
+		Datacenter: "",
+		WaitTime:   5 * time.Millisecond,
+		Namespace:  "",
+	})
+	if err != nil {
+		panic(err)
+	}
+	return consul.New(client)
+}
+
+func NewUserClient() pb.UserServiceClient {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	endpoint := "discovery:///user-service-server"
+	conn, err := grpcserver.DialInsecure(
+		ctx,
+		grpcserver.WithEndpoint(endpoint),
+		grpcserver.WithDiscovery(getConsulDiscovery()),
+	)
+	if err != nil {
+		panic(err)
+	}
+	c := pb.NewUserServiceClient(conn)
+	return c
+}
+
 func main() {
-	ConnectGrpcServer()
-	userServiceServer := service.NewUserServiceServer(UserServiceServerClient)
+	//c := ConnectGrpcServer()
+	c := NewUserClient()
+	userServiceServer := service.NewUserServiceServer(c)
 	hs := NewHTTPServer(userServiceServer)
 
 	app := gaia.New(
