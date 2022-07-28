@@ -2,22 +2,49 @@ syntax = "proto3";
 
 package user;
 
-import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
 
-option go_package = "github.com/apus-run/gaia/examples/user-service/proto";
+option go_package = "github.com/apus-run/gaia/examples/http/gin/proto";
 
 service UserService {
   // auth
-  rpc Register(RegisterRequest) returns (RegisterReply) {}
-  rpc Login(LoginRequest) returns (LoginReply) {}
-  rpc Logout(LogoutRequest) returns (google.protobuf.Empty) {}
+  rpc Register(RegisterRequest) returns (RegisterReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/register"
+      body: "*"
+    };
+  }
+  rpc Login(LoginRequest) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/login"
+      body: "*"
+    };
+  }
+  rpc Logout(LogoutRequest) returns (LogoutReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/logout"
+      body: "*"
+    };
+  }
 
   // user
-  rpc CreateUser(CreateUserRequest) returns(CreateUserReply) {}
-  rpc GetUser(GetUserRequest) returns (GetUserReply) {}
-  rpc BatchGetUsers(BatchGetUsersRequest) returns (BatchGetUsersReply) {}
-  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserReply) {}
-  rpc UpdatePassword(UpdatePasswordRequest) returns (UpdatePasswordReply) {}
+  rpc GetUser(GetUserRequest) returns (GetUserReply) {
+    option (google.api.http) = {
+      get: "/v1/users/{id}"
+    };
+  }
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserReply) {
+    option (google.api.http) = {
+      put: "/v1/users/{id}"
+      body: "*"
+    };
+  }
+  rpc UpdatePassword(UpdatePasswordRequest) returns (UpdatePasswordReply) {
+    option (google.api.http) = {
+      patch: "/v1/users/password/{id}"
+      body: "*"
+    };
+  }
 }
 
 enum StatusType {
@@ -76,6 +103,9 @@ message LogoutRequest {
   string token = 2;
 }
 
+message LogoutReply {
+}
+
 message CreateUserRequest {
   string username = 1;
   string email = 2;
@@ -117,6 +147,7 @@ message UpdatePasswordReply {
 }
 
 message GetUserRequest {
+  // @gotags: uri:"id"
   int64 id = 1;
 }
 

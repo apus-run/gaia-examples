@@ -71,7 +71,7 @@ go get -v google.golang.org/grpc/cmd/protoc-gen-go-grpc@last
 ```bash
 $ protoc --go_out=. --go_opt=paths=source_relative \
     --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-    helloworld/api/helloworld.proto
+    helloworld/proto/helloworld.proto
 ```
 > 会生成两个文件 `*.pb.go` 和 `*._grpc.pb.go`, 分别是消息序列化代码和 `gRPC` 代码.
 

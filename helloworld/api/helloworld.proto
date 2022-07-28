@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package helloworld;
 
-option go_package="github.com/apus-run/gaia/examples/helloworld/api";
+option go_package="github.com/apus-run/gaia/examples/helloworld/proto";
 
 // The greeting service definition.
 service Greeter {

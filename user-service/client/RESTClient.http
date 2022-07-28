@@ -7,3 +7,13 @@ content-type: application/json
     "username": "admin",
     "email": "admin@163.com"
 }
+
+
+### 用户登录
+POST http://localhost:8000/login HTTP/1.1
+content-type: application/json
+
+{
+  "username": "admin",
+  "password": "123456"
+}

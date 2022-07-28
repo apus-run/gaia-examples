@@ -1,0 +1,19 @@
+### 用户登录
+POST http://localhost:8000/v1/auth/login HTTP/1.1
+content-type: application/json
+
+{
+  "username": "admin",
+  "password": "123456",
+  "email": "admin@163.com"
+}
+
+### 用户注册
+POST http://localhost:8000/v1/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "username": "Hello",
+  "email": "Hello",
+  "password": "Hello"
+}

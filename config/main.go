@@ -4,10 +4,10 @@ import (
 	"flag"
 	"log"
 
-	"github.com/apus-run/gaia/config"
+	"github.com/apus-run/gaia/pkg/config"
 )
 
-var flagconf string
+var flagConf string
 
 // Defines the config JSON Field
 
@@ -29,12 +29,12 @@ type AppConfig struct {
 }
 
 func init() {
-	flag.StringVar(&flagconf, "conf", "gaia.yaml", "config path, eg: -conf gaia.yaml")
+	flag.StringVar(&flagConf, "conf", "gaia.yaml", "config path, eg: -conf gaia.yaml")
 }
 
 func main() {
 	flag.Parse()
-	if err := config.Load(flagconf); err != nil {
+	if err := config.Load(flagConf); err != nil {
 		panic(err)
 	}
 
@@ -44,5 +44,5 @@ func main() {
 	fgc := config.File("gaia").Get("grpc.server.address")
 	log.Printf("address: %s", fgc)
 
-	config.Watch()
+	// config.Watch()
 }

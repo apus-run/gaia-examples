@@ -10,12 +10,14 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/apus-run/gaia"
-	pb "github.com/apus-run/gaia/examples/user-service/api"
-	"github.com/apus-run/gaia/examples/user-service/pkg"
 	"github.com/apus-run/gaia/log"
+	"github.com/apus-run/gaia/middleware"
 	"github.com/apus-run/gaia/middleware/recovery"
+	"github.com/apus-run/gaia/pkg/xgin"
 	grpcserver "github.com/apus-run/gaia/transport/grpc"
 	httpserver "github.com/apus-run/gaia/transport/http"
+
+	pb "github.com/apus-run/gaia/examples/user-service/api"
 )
 
 var (
@@ -111,16 +113,52 @@ func createUser(c *gin.Context) {
 	c.JSON(http.StatusOK, rsp)
 }
 
+type login struct {
+	Username string `json:"username" form:"username" binding:"required"`
+	Password string `json:"password" form:"password" binding:"required"`
+}
+
+func Login(c *xgin.Context) {
+	var param login
+	err := c.Bind(&param)
+	if err != nil {
+		c.JSONE(1, err.Error(), nil)
+	}
+	if len(param.Username) < 2 || len(param.Password) > 20 {
+		c.JSONE(1, "username length should between 2 ~ 20", "")
+		return
+	}
+
+	log.Infof("用户: %v, %v", param.Password, param.Username)
+	// 数据库操作
+
+	// c.JSONOK("")
+	// c.Success(gin.H{})
+	c.Success(param)
+
+	return
+}
+
+func customMiddleware(handler middleware.Handler) middleware.Handler {
+	return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
+		log.Info("自定义标准插件")
+		reply, err = handler(ctx, req)
+		return
+	}
+}
+
 func NewRouter() *gin.Engine {
 	g := gin.New()
 	// 使用gaia中间件
-	g.Use(pkg.Middlewares(recovery.Recovery()))
+	g.Use(xgin.Middlewares(recovery.Recovery(), customMiddleware))
 
-	g.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "ok")
+	g.GET("/user/:name", func(c *gin.Context) {
+		name := c.Param("name")
+		c.JSON(http.StatusOK, map[string]string{"welcome": name})
 	})
 
 	g.POST("/user", createUser)
+	g.POST("/login", xgin.Handle(Login))
 
 	return g
 }

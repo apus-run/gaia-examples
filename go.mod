@@ -3,10 +3,13 @@ module github.com/apus-run/gaia/examples
 go 1.18
 
 require (
-	github.com/apus-run/gaia v1.5.0
+	github.com/apus-run/gaia v1.7.0
+	github.com/apus-run/gaia/pkg v0.0.0-20220727020943-88f636a57443
 	github.com/gin-gonic/gin v1.8.1
 	github.com/golang/protobuf v1.5.2
+	github.com/jinzhu/copier v0.3.5
 	github.com/labstack/echo/v4 v4.7.2
+	google.golang.org/genproto v0.0.0-20220519153652-3a47de7e79bd
 	google.golang.org/grpc v1.48.0
 	google.golang.org/protobuf v1.28.0
 )
@@ -47,7 +50,6 @@ require (
 	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324 // indirect
-	google.golang.org/genproto v0.0.0-20220519153652-3a47de7e79bd // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

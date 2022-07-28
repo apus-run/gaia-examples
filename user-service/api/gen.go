@@ -1,3 +1,7 @@
 package api
 
-//go:generate protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative user.proto
+//go:generate protoc -I . -I ../../third_party --go_out=paths=source_relative:. --go-grpc_out=paths=source_relative:. ./user.proto
+
+//go:generate protoc -I . -I ../../third_party --go_out=paths=source_relative:. --go-gin_out=paths=source_relative:. ./user.proto
+
+//go:generate protoc-go-inject-tag -input=*.pb.go

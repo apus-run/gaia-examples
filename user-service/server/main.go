@@ -3,11 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+
 	"github.com/apus-run/gaia"
-	pb "github.com/apus-run/gaia/examples/user-service/api"
 	"github.com/apus-run/gaia/log"
 	"github.com/apus-run/gaia/middleware/recovery"
 	"github.com/apus-run/gaia/transport/grpc"
+
+	pb "github.com/apus-run/gaia/examples/user-service/api"
 )
 
 var (
