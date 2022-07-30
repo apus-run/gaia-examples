@@ -11,12 +11,14 @@ import (
 	"github.com/apus-run/gaia/middleware/recovery"
 	"github.com/apus-run/gaia/pkg/xgin"
 	"github.com/apus-run/gaia/plugins/registry/consul"
+	"github.com/apus-run/gaia/plugins/registry/nacos"
 	"github.com/apus-run/gaia/registry"
 	grpcserver "github.com/apus-run/gaia/transport/grpc"
 	httpserver "github.com/apus-run/gaia/transport/http"
 	"github.com/gin-gonic/gin"
 
 	consulclient "github.com/apus-run/gaia/examples/http/gin/discovery/consul"
+	nacosclient "github.com/apus-run/gaia/examples/http/gin/discovery/nacos"
 	pb "github.com/apus-run/gaia/examples/http/gin/proto"
 	"github.com/apus-run/gaia/examples/http/gin/web/service"
 )
@@ -99,15 +101,36 @@ func getConsulDiscovery() registry.Discovery {
 	return consul.New(client)
 }
 
+// TODO: nacos 的 endpoint 很特殊, 必须是 .grpc 后缀
+// 例如: endpoint := "discovery:///user-service-server.grpc"
+func getNacosDiscovery() registry.Discovery {
+	client, err := nacosclient.New(&nacosclient.Config{
+		Address:   "127.0.0.1",
+		Port:      8848,
+		TimeoutMs: 5000,
+		LogDir:    "",
+		CacheDir:  "warn",
+	})
+
+	if err != nil {
+		panic(err)
+	}
+	return nacos.New(client)
+}
+
 func NewUserClient() pb.UserServiceClient {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	endpoint := "discovery:///user-service-server"
+	// consul 配置
+	// endpoint := "discovery:///user-service-server"
+
+	// nacos 配置
+	endpoint := "discovery:///user-service-server.grpc"
 	conn, err := grpcserver.DialInsecure(
 		ctx,
 		grpcserver.WithEndpoint(endpoint),
-		grpcserver.WithDiscovery(getConsulDiscovery()),
+		grpcserver.WithDiscovery(getNacosDiscovery()),
 	)
 	if err != nil {
 		panic(err)

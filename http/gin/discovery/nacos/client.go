@@ -9,7 +9,7 @@ import (
 
 // Config consul config
 type Config struct {
-	Addr        string
+	Address     string
 	Port        uint64
 	NamespaceId string // default public
 	TimeoutMs   uint64 // unit: default 10000ms
@@ -20,7 +20,7 @@ type Config struct {
 
 func New(cfg *Config) (naming_client.INamingClient, error) {
 	sc := []constant.ServerConfig{
-		*constant.NewServerConfig(cfg.Addr, cfg.Port),
+		*constant.NewServerConfig(cfg.Address, cfg.Port),
 	}
 
 	cc := &constant.ClientConfig{

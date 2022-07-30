@@ -3,8 +3,10 @@ package main
 import (
 	"github.com/apus-run/gaia"
 	consulclient "github.com/apus-run/gaia/examples/http/gin/discovery/consul"
+	nacosclient "github.com/apus-run/gaia/examples/http/gin/discovery/nacos"
 	"github.com/apus-run/gaia/log"
 	"github.com/apus-run/gaia/plugins/registry/consul"
+	"github.com/apus-run/gaia/plugins/registry/nacos"
 	"github.com/apus-run/gaia/registry"
 	grpcserver "github.com/apus-run/gaia/transport/grpc"
 	"time"
@@ -52,6 +54,21 @@ func getConsulRegistry() registry.Registry {
 	return consul.New(client)
 }
 
+func getNacosRegistry() registry.Registry {
+	client, err := nacosclient.New(&nacosclient.Config{
+		Address:   "127.0.0.1",
+		Port:      8848,
+		TimeoutMs: 5000,
+		LogDir:    "",
+		CacheDir:  "warn",
+	})
+
+	if err != nil {
+		panic(err)
+	}
+	return nacos.New(client)
+}
+
 func main() {
 	userServiceServer := service.NewUserServiceServer()
 	gs := NewGRPCServer(userServiceServer)
@@ -63,7 +80,8 @@ func main() {
 		gaia.WithServer(
 			gs,
 		),
-		gaia.WithRegistry(getConsulRegistry()),
+		// gaia.WithRegistry(getConsulRegistry()),
+		gaia.WithRegistry(getNacosRegistry()),
 	)
 
 	if err := app.Run(); err != nil {

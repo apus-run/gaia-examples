@@ -3,9 +3,10 @@ module github.com/apus-run/gaia/examples
 go 1.18
 
 require (
-	github.com/apus-run/gaia v1.7.1
+	github.com/apus-run/gaia v1.7.2
 	github.com/apus-run/gaia/pkg v0.0.0-20220727020943-88f636a57443
 	github.com/apus-run/gaia/plugins/registry/consul v0.0.0-20220728080938-b7c53fb46db2
+	github.com/apus-run/gaia/plugins/registry/nacos v0.0.0-20220728133114-6a83fa3c86ad
 	github.com/gin-gonic/gin v1.8.1
 	github.com/golang/protobuf v1.5.2
 	github.com/hashicorp/consul/api v1.13.1
