@@ -31,7 +31,7 @@ var (
 	UserServiceServerClient pb.UserServiceClient
 )
 
-func ConnectGrpcServer() {
+func ConnectGrpcServer() pb.UserServiceClient {
 	conn, err := grpcserver.DialInsecure(
 		context.Background(),
 		grpcserver.WithEndpoint("127.0.0.1:9000"),
@@ -43,7 +43,9 @@ func ConnectGrpcServer() {
 		log.Fatalf("did not connect: %v", err)
 	}
 
-	UserServiceServerClient = pb.NewUserServiceClient(conn)
+	c := pb.NewUserServiceClient(conn)
+
+	return c
 }
 
 func HandleGrpcErrorToHttp(err error, c *gin.Context) {
@@ -164,7 +166,11 @@ func NewRouter() *gin.Engine {
 }
 
 func main() {
-	ConnectGrpcServer()
+	c := ConnectGrpcServer()
+	UserServiceServerClient = c
+
+	gin.SetMode("release")
+	router := NewRouter()
 
 	// http server
 	httpServer := httpserver.NewServer(
@@ -173,8 +179,6 @@ func main() {
 		//	recovery.Recovery(),
 		//),
 	)
-	gin.SetMode("release")
-	router := NewRouter()
 
 	httpServer.Handler = router
 

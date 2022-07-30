@@ -17,3 +17,10 @@ content-type: application/json
   "email": "moocss@163.com",
   "password": "123456"
 }
+
+
+### 通过用户ID获取取用户
+GET http://localhost:8000/v1/users/200 HTTP/1.1
+
+### 用户分页列表
+GET http://localhost:8000/v1/users?page=10&limit=2 HTTP/1.1

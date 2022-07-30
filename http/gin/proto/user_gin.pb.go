@@ -20,6 +20,7 @@ import (
 
 type UserServiceHTTPServer interface {
 	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
+	ListUsers(context.Context, *ListUserRequest) (*ListUserReply, error)
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
 	Logout(context.Context, *LogoutRequest) (*LogoutReply, error)
 	Register(context.Context, *RegisterRequest) (*RegisterReply, error)
@@ -178,6 +179,29 @@ func (s *UserService) UpdatePassword_0(ctx *xgin.Context) {
 	ctx.Success(out)
 }
 
+func (s *UserService) ListUsers_0(ctx *xgin.Context) {
+	var in ListUserRequest
+
+	if err := ctx.ShouldBindQuery(&in); err != nil {
+		e := errcode.ErrInvalidParam.WithDetails(err.Error())
+		ctx.Error(e)
+		return
+	}
+
+	md := metadata.New(nil)
+	for k, v := range ctx.Request.Header {
+		md.Set(k, v...)
+	}
+	newCtx := metadata.NewIncomingContext(ctx, md)
+	out, err := s.server.(UserServiceHTTPServer).ListUsers(newCtx, &in)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	ctx.Success(out)
+}
+
 func (s *UserService) RegisterService() {
 	s.router.Handle("POST", "/v1/auth/register", xgin.Handle(s.Register_0))
 	s.router.Handle("POST", "/v1/auth/login", xgin.Handle(s.Login_0))
@@ -185,4 +209,5 @@ func (s *UserService) RegisterService() {
 	s.router.Handle("GET", "/v1/users/:id", xgin.Handle(s.GetUser_0))
 	s.router.Handle("PUT", "/v1/users/:id", xgin.Handle(s.UpdateUser_0))
 	s.router.Handle("PATCH", "/v1/users/password/:id", xgin.Handle(s.UpdatePassword_0))
+	s.router.Handle("GET", "/v1/users", xgin.Handle(s.ListUsers_0))
 }

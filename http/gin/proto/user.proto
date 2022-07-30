@@ -45,6 +45,11 @@ service UserService {
       body: "*"
     };
   }
+  rpc ListUsers (ListUserRequest) returns (ListUserReply) {
+    option (google.api.http) = {
+      get: "/v1/users"
+    };
+  };
 }
 
 enum StatusType {
@@ -161,4 +166,18 @@ message BatchGetUsersRequest {
 
 message BatchGetUsersReply {
   repeated User users = 1;
+}
+
+message ListUserRequest {
+  // @gotags: form:"page"
+  int64 page = 1;
+  // @gotags: form:"limit"
+  int64 limit = 2;
+}
+
+message ListUserReply {
+  repeated User users = 1;
+  int64 page = 2;
+  int64 limit = 3;
+  int64 total = 4;
 }

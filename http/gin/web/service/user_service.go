@@ -115,6 +115,27 @@ func (s *UserServiceServer) UpdatePassword(ctx context.Context, req *pb.UpdatePa
 	return &pb.UpdatePasswordReply{}, nil
 }
 
+func (s *UserServiceServer) ListUsers(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
+	limit := req.GetLimit()
+	page := req.GetPage()
+	in := &pb.ListUserRequest{
+		Page:  page,
+		Limit: limit,
+	}
+
+	out, err := s.userRPC.ListUsers(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.ListUserReply{
+		Users: out.Users,
+		Page:  out.Page,
+		Limit: out.Limit,
+		Total: out.Total,
+	}, nil
+}
+
 func convertUser(u *pb.User) (*pb.User, error) {
 	user := pb.User{}
 	err := copier.Copy(&user, &u)

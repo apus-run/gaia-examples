@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	pb "github.com/apus-run/gaia/examples/http/gin/proto"
 )
 
@@ -45,8 +44,40 @@ func (s *UserServiceServer) UpdatePassword(ctx context.Context, req *pb.UpdatePa
 	return &pb.UpdatePasswordReply{}, nil
 }
 func (s *UserServiceServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserReply, error) {
-	return &pb.GetUserReply{}, nil
+	return &pb.GetUserReply{
+		User: &pb.User{
+			Id:       req.Id,
+			Username: "moocss",
+			Email:    "moocss@163.com",
+		},
+	}, nil
 }
 func (s *UserServiceServer) BatchGetUsers(ctx context.Context, req *pb.BatchGetUsersRequest) (*pb.BatchGetUsersReply, error) {
 	return &pb.BatchGetUsersReply{}, nil
+}
+
+func (s *UserServiceServer) ListUsers(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
+	if req.GetLimit() == 0 {
+		req.Limit = 10
+	}
+	if req.GetPage() == 0 {
+		req.Page = 1
+	}
+	return &pb.ListUserReply{
+		Users: []*pb.User{
+			{
+				Id:       1,
+				Username: "moocss",
+				Email:    "moocss@163.com",
+			},
+			{
+				Id:       2,
+				Username: "moocss2",
+				Email:    "moocss2@163.com",
+			},
+		},
+		Page:  req.GetPage(),
+		Limit: req.GetLimit() + 1,
+		Total: 200,
+	}, nil
 }
