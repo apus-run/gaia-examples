@@ -29,7 +29,7 @@ type UserServiceHTTPServer interface {
 }
 
 func RegisterUserServiceHTTPServer(r gin.IRouter, srv UserServiceHTTPServer) {
-	s := UserService{
+	s := &UserService{
 		server: srv,
 		router: r,
 	}

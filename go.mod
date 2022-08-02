@@ -3,10 +3,11 @@ module github.com/apus-run/gaia/examples
 go 1.18
 
 require (
-	github.com/apus-run/gaia v1.7.2
+	github.com/apus-run/gaia v1.7.3
 	github.com/apus-run/gaia/pkg v0.0.0-20220727020943-88f636a57443
 	github.com/apus-run/gaia/plugins/registry/consul v0.0.0-20220728080938-b7c53fb46db2
 	github.com/apus-run/gaia/plugins/registry/nacos v0.0.0-20220728133114-6a83fa3c86ad
+	github.com/envoyproxy/protoc-gen-validate v0.1.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/golang/protobuf v1.5.2
 	github.com/hashicorp/consul/api v1.13.1
@@ -35,6 +36,7 @@ require (
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
+	github.com/google/gnostic v0.6.9 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-hclog v1.2.0 // indirect

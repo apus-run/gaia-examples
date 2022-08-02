@@ -53,7 +53,9 @@ func (s *UserServiceServer) Login(ctx context.Context, req *pb.LoginRequest) (*p
 		Email:    req.Email,
 		Password: req.Password,
 	}
+
 	out, err := s.userRPC.Login(ctx, in)
+
 	if err != nil {
 		// check client if deadline exceeded
 		statusErr, ok := status.FromError(err)

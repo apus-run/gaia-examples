@@ -7,6 +7,7 @@
 package proto
 
 import (
+	_ "google.golang.org/genproto/googleapis/proto/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -989,7 +990,7 @@ type GetUserRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// @gotags: uri:"id"
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" uri:"id"`
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
 func (x *GetUserRequest) Reset() {
@@ -1178,9 +1179,9 @@ type ListUserRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// @gotags: form:"page"
-	Page int64 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty" form:"page"`
+	Page int64 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
 	// @gotags: form:"limit"
-	Limit int64 `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty" form:"limit"`
+	Limit int64 `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
 }
 
 func (x *ListUserRequest) Reset() {
