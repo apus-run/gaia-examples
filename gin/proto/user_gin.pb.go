@@ -6,7 +6,7 @@ package proto
 import (
 	context "context"
 	errcode "github.com/apus-run/gaia/pkg/errcode"
-	xgin "github.com/apus-run/gaia/pkg/xgin"
+	xgin "github.com/apus-run/gaia/pkg/ginx"
 	gin "github.com/gin-gonic/gin"
 	metadata "google.golang.org/grpc/metadata"
 )

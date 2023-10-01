@@ -6,15 +6,15 @@ import (
 	"time"
 
 	"github.com/apus-run/gaia"
-	"github.com/apus-run/gaia/log"
 	"github.com/apus-run/gaia/middleware"
 	"github.com/apus-run/gaia/middleware/recovery"
-	"github.com/apus-run/gaia/pkg/xgin"
+	"github.com/apus-run/gaia/pkg/ginx"
 	"github.com/apus-run/gaia/plugins/registry/consul"
 	"github.com/apus-run/gaia/plugins/registry/nacos"
 	"github.com/apus-run/gaia/registry"
 	grpcserver "github.com/apus-run/gaia/transport/grpc"
 	httpserver "github.com/apus-run/gaia/transport/http"
+	"github.com/apus-run/sea-kit/log"
 	"github.com/gin-gonic/gin"
 
 	consulclient "github.com/apus-run/gaia/examples/http/gin/discovery/consul"
@@ -58,7 +58,7 @@ func customMiddleware(handler middleware.Handler) middleware.Handler {
 func NewRouter() *gin.Engine {
 	g := gin.New()
 	// 使用gaia中间件
-	g.Use(xgin.Middlewares(recovery.Recovery(), customMiddleware))
+	g.Use(ginx.Middlewares(recovery.Recovery(), customMiddleware))
 
 	g.GET("/user/:name", func(c *gin.Context) {
 		name := c.Param("name")
