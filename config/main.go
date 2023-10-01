@@ -4,7 +4,8 @@ import (
 	"flag"
 	"log"
 
-	"github.com/apus-run/gaia/pkg/config"
+	"github.com/apus-run/sea-kit/config"
+	"github.com/apus-run/sea-kit/config/file"
 )
 
 var flagConf string
@@ -34,15 +35,26 @@ func init() {
 
 func main() {
 	flag.Parse()
-	if err := config.Load(flagConf); err != nil {
-		panic(err)
+
+	c := config.New(
+		config.WithSource(
+			// 添加前缀为 WEBSERVER_ 的环境变量，不需要的话也可以设为空字符串
+			// env.NewSource("WEBSERVER_"),
+			file.NewSource(flagConf),
+		),
+	)
+
+	defer c.Close()
+
+	// 加载配置源：
+	if err := c.Load(); err != nil {
+		log.Fatal(err)
 	}
 
-	gc := config.Get("http.server.address")
-	log.Printf("address: %s", gc)
+	var cf AppConfig
+	if err := c.Scan(&cf); err != nil {
+		panic(err)
+	}
+	log.Printf("配置文件: %+v", cf)
 
-	fgc := config.File("gaia").Get("grpc.server.address")
-	log.Printf("address: %s", fgc)
-
-	// config.Watch()
 }

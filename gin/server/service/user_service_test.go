@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/test/bufconn"
 
-	pb "github.com/apus-run/gaia/examples/http/gin/proto"
+	pb "github.com/apus-run/gaia/examples/gin/proto"
 )
 
 const (

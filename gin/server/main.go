@@ -1,19 +1,20 @@
 package main
 
 import (
+	"time"
+
 	"github.com/apus-run/gaia"
-	consulclient "github.com/apus-run/gaia/examples/http/gin/discovery/consul"
-	nacosclient "github.com/apus-run/gaia/examples/http/gin/discovery/nacos"
+	"github.com/apus-run/gaia/middleware/recovery"
 	"github.com/apus-run/gaia/plugins/registry/consul"
 	"github.com/apus-run/gaia/plugins/registry/nacos"
 	"github.com/apus-run/gaia/registry"
 	grpcserver "github.com/apus-run/gaia/transport/grpc"
 	"github.com/apus-run/sea-kit/log"
-	"time"
 
-	pb "github.com/apus-run/gaia/examples/http/gin/proto"
-	"github.com/apus-run/gaia/examples/http/gin/server/service"
-	"github.com/apus-run/gaia/middleware/recovery"
+	consulclient "github.com/apus-run/gaia/examples/gin/discovery/consul"
+	nacosclient "github.com/apus-run/gaia/examples/gin/discovery/nacos"
+	pb "github.com/apus-run/gaia/examples/gin/proto"
+	"github.com/apus-run/gaia/examples/gin/server/service"
 )
 
 var (

@@ -2,12 +2,13 @@ package service
 
 import (
 	"context"
+
 	"github.com/jinzhu/copier"
 	"github.com/spf13/cast"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	pb "github.com/apus-run/gaia/examples/http/gin/proto"
+	pb "github.com/apus-run/gaia/examples/gin/proto"
 )
 
 var (

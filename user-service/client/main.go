@@ -2,20 +2,20 @@ package main
 
 import (
 	"context"
-
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"github.com/apus-run/gaia"
-	"github.com/apus-run/gaia/log"
 	"github.com/apus-run/gaia/middleware"
 	"github.com/apus-run/gaia/middleware/recovery"
-	"github.com/apus-run/gaia/pkg/xgin"
+	"github.com/apus-run/gaia/pkg/ginx"
 	grpcserver "github.com/apus-run/gaia/transport/grpc"
 	httpserver "github.com/apus-run/gaia/transport/http"
+	"github.com/apus-run/sea-kit/log"
 
 	pb "github.com/apus-run/gaia/examples/user-service/api"
 )
@@ -25,6 +25,8 @@ var (
 	Name = "user-service-client"
 	// Version is the version of the compiled software.
 	Version = "v1.0.0"
+
+	id, _ = os.Hostname()
 )
 
 var (
@@ -120,7 +122,7 @@ type login struct {
 	Password string `json:"password" form:"password" binding:"required"`
 }
 
-func Login(c *xgin.Context) {
+func Login(c *ginx.Context) {
 	var param login
 	err := c.Bind(&param)
 	if err != nil {
@@ -152,7 +154,7 @@ func customMiddleware(handler middleware.Handler) middleware.Handler {
 func NewRouter() *gin.Engine {
 	g := gin.New()
 	// 使用gaia中间件
-	g.Use(xgin.Middlewares(recovery.Recovery(), customMiddleware))
+	g.Use(ginx.Middlewares(recovery.Recovery(), customMiddleware))
 
 	g.GET("/user/:name", func(c *gin.Context) {
 		name := c.Param("name")
@@ -160,12 +162,20 @@ func NewRouter() *gin.Engine {
 	})
 
 	g.POST("/user", createUser)
-	g.POST("/login", xgin.Handle(Login))
+	g.POST("/login", ginx.Handle(Login))
 
 	return g
 }
 
 func main() {
+	logger := log.With(log.NewStdLogger(os.Stdout),
+		"ts", log.DefaultTimestamp,
+		"caller", log.DefaultCaller,
+		"service.id", id,
+		"service.name", Name,
+		"service.version", Version,
+	)
+
 	c := ConnectGrpcServer()
 	UserServiceServerClient = c
 
@@ -185,7 +195,7 @@ func main() {
 	app := gaia.New(
 		gaia.WithName(Name),
 		gaia.WithVersion(Version),
-		gaia.WithLogger(log.GetLogger()),
+		gaia.WithLogger(logger),
 		gaia.WithServer(
 			httpServer,
 		),

@@ -17,10 +17,12 @@ import (
 	"github.com/apus-run/sea-kit/log"
 	"github.com/gin-gonic/gin"
 
-	consulclient "github.com/apus-run/gaia/examples/http/gin/discovery/consul"
-	nacosclient "github.com/apus-run/gaia/examples/http/gin/discovery/nacos"
-	pb "github.com/apus-run/gaia/examples/http/gin/proto"
-	"github.com/apus-run/gaia/examples/http/gin/web/service"
+	consulclient "github.com/apus-run/gaia/examples/gin/discovery/consul"
+	nacosclient "github.com/apus-run/gaia/examples/gin/discovery/nacos"
+	pb "github.com/apus-run/gaia/examples/gin/proto"
+	"github.com/apus-run/gaia/examples/gin/web/service"
+
+	_ "go.uber.org/automaxprocs"
 )
 
 var (

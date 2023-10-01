@@ -2,11 +2,14 @@ package main
 
 import (
 	"context"
-	"log"
 
-	pb "github.com/apus-run/gaia/examples/helloworld/api"
 	"github.com/apus-run/gaia/middleware/recovery"
 	"github.com/apus-run/gaia/transport/grpc"
+	"github.com/apus-run/sea-kit/log"
+
+	pb "github.com/apus-run/gaia/examples/helloworld/api"
+
+	_ "go.uber.org/automaxprocs"
 )
 
 func main() {
@@ -32,11 +35,11 @@ func runGrpc() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("[grpc] SayHello %+v\n", reply)
+	log.Infof("[grpc] SayHello %+v\n", reply)
 
 	// returns error
 	_, err = client.SayHello(context.Background(), &pb.HelloRequest{Name: "error"})
 	if err != nil {
-		log.Printf("[grpc] SayHello error: %v\n", err)
+		log.Infof("[grpc] SayHello error: %v\n", err)
 	}
 }

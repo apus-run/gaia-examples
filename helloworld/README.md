@@ -7,7 +7,7 @@ syntax = "proto3";
 
 package helloworld;
 
-option go_package="github.com/go-eagle/eagle/examples/helloworld/helloworld";
+option go_package="github.com/go-eagle/eagle/examples/helloworld/api";
 
 // The greeting service definition.
 service Greeter {

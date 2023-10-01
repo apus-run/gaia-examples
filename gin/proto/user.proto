@@ -4,7 +4,7 @@ package user;
 
 import "google/api/annotations.proto";
 
-option go_package = "github.com/apus-run/gaia/examples/http/gin/proto";
+option go_package = "github.com/apus-run/gaia/examples/gin/proto";
 
 service UserService {
   // auth

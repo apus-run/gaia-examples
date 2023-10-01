@@ -1,12 +1,12 @@
 // Code generated protoc-gen-go-gin. DO NOT EDIT.
-// protoc-gen-go-gin v1.0.0
+// protoc-gen-go-gin v2.1.0
 
 package proto
 
 import (
 	context "context"
 	errcode "github.com/apus-run/gaia/pkg/errcode"
-	xgin "github.com/apus-run/gaia/pkg/ginx"
+	ginx "github.com/apus-run/gaia/pkg/ginx"
 	gin "github.com/gin-gonic/gin"
 	metadata "google.golang.org/grpc/metadata"
 )
@@ -16,7 +16,7 @@ import (
 
 // context.
 // metadata.
-// gin.xgin.errcode.
+// gin.ginx.errcode.
 
 type UserServiceHTTPServer interface {
 	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
@@ -41,7 +41,7 @@ type UserService struct {
 	router gin.IRouter
 }
 
-func (s *UserService) Register_0(ctx *xgin.Context) {
+func (s *UserService) Register_0_HTTP_Handler(ctx *ginx.Context) {
 	var in RegisterRequest
 
 	if err := ctx.ShouldBindJSON(&in); err != nil {
@@ -64,7 +64,7 @@ func (s *UserService) Register_0(ctx *xgin.Context) {
 	ctx.Success(out)
 }
 
-func (s *UserService) Login_0(ctx *xgin.Context) {
+func (s *UserService) Login_0_HTTP_Handler(ctx *ginx.Context) {
 	var in LoginRequest
 
 	if err := ctx.ShouldBindJSON(&in); err != nil {
@@ -87,7 +87,7 @@ func (s *UserService) Login_0(ctx *xgin.Context) {
 	ctx.Success(out)
 }
 
-func (s *UserService) Logout_0(ctx *xgin.Context) {
+func (s *UserService) Logout_0_HTTP_Handler(ctx *ginx.Context) {
 	var in LogoutRequest
 
 	if err := ctx.ShouldBindJSON(&in); err != nil {
@@ -110,7 +110,7 @@ func (s *UserService) Logout_0(ctx *xgin.Context) {
 	ctx.Success(out)
 }
 
-func (s *UserService) GetUser_0(ctx *xgin.Context) {
+func (s *UserService) GetUser_0_HTTP_Handler(ctx *ginx.Context) {
 	var in GetUserRequest
 
 	if err := ctx.ShouldBindUri(&in); err != nil {
@@ -133,7 +133,7 @@ func (s *UserService) GetUser_0(ctx *xgin.Context) {
 	ctx.Success(out)
 }
 
-func (s *UserService) UpdateUser_0(ctx *xgin.Context) {
+func (s *UserService) UpdateUser_0_HTTP_Handler(ctx *ginx.Context) {
 	var in UpdateUserRequest
 
 	if err := ctx.ShouldBindUri(&in); err != nil {
@@ -156,7 +156,7 @@ func (s *UserService) UpdateUser_0(ctx *xgin.Context) {
 	ctx.Success(out)
 }
 
-func (s *UserService) UpdatePassword_0(ctx *xgin.Context) {
+func (s *UserService) UpdatePassword_0_HTTP_Handler(ctx *ginx.Context) {
 	var in UpdatePasswordRequest
 
 	if err := ctx.ShouldBindUri(&in); err != nil {
@@ -179,7 +179,7 @@ func (s *UserService) UpdatePassword_0(ctx *xgin.Context) {
 	ctx.Success(out)
 }
 
-func (s *UserService) ListUsers_0(ctx *xgin.Context) {
+func (s *UserService) ListUsers_0_HTTP_Handler(ctx *ginx.Context) {
 	var in ListUserRequest
 
 	if err := ctx.ShouldBindQuery(&in); err != nil {
@@ -203,11 +203,11 @@ func (s *UserService) ListUsers_0(ctx *xgin.Context) {
 }
 
 func (s *UserService) RegisterService() {
-	s.router.Handle("POST", "/v1/auth/register", xgin.Handle(s.Register_0))
-	s.router.Handle("POST", "/v1/auth/login", xgin.Handle(s.Login_0))
-	s.router.Handle("POST", "/v1/auth/logout", xgin.Handle(s.Logout_0))
-	s.router.Handle("GET", "/v1/users/:id", xgin.Handle(s.GetUser_0))
-	s.router.Handle("PUT", "/v1/users/:id", xgin.Handle(s.UpdateUser_0))
-	s.router.Handle("PATCH", "/v1/users/password/:id", xgin.Handle(s.UpdatePassword_0))
-	s.router.Handle("GET", "/v1/users", xgin.Handle(s.ListUsers_0))
+	s.router.Handle("POST", "/v1/auth/register", ginx.Handle(s.Register_0_HTTP_Handler))
+	s.router.Handle("POST", "/v1/auth/login", ginx.Handle(s.Login_0_HTTP_Handler))
+	s.router.Handle("POST", "/v1/auth/logout", ginx.Handle(s.Logout_0_HTTP_Handler))
+	s.router.Handle("GET", "/v1/users/:id", ginx.Handle(s.GetUser_0_HTTP_Handler))
+	s.router.Handle("PUT", "/v1/users/:id", ginx.Handle(s.UpdateUser_0_HTTP_Handler))
+	s.router.Handle("PATCH", "/v1/users/password/:id", ginx.Handle(s.UpdatePassword_0_HTTP_Handler))
+	s.router.Handle("GET", "/v1/users", ginx.Handle(s.ListUsers_0_HTTP_Handler))
 }

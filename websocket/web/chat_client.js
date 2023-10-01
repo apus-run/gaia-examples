@@ -39,7 +39,9 @@ function sendMessage(id, payload) {
     dv.setInt32(0, id);
     buff.set(payloadBuff, 4);
 
-    console.log(ab2str(buff))
+    console.log("sendMessage:", ab2str(buff))
+
+    console.log("sendMessage---->buffer:", dv.buffer)
 
     ws.send(dv.buffer);
 }
@@ -66,7 +68,7 @@ function handleMessage(messageType, messagePayload) {
 
     const str = ab2str(messagePayload);
     console.log('Message:', str);
-
+    console.log("str2ab: ", str2ab(str));
     let packet = JSON.parse(str);
     console.log('recv:', packet);
     showMessage(packet.message);
@@ -80,7 +82,7 @@ function createWebsocketClient() {
         ws.close();
     }
 
-    ws = new WebSocket(`ws://localhost:7700`);
+    ws = new WebSocket(`ws://localhost:8800/ws`);
     ws.binaryType = "arraybuffer";
 
     ws.onerror = function () {
@@ -111,5 +113,7 @@ function createWebsocketClient() {
         handleMessage(messageType, event.data.slice(4));
     };
 }
+window.onload= function (){
+    createWebsocketClient();
+}
 
-createWebsocketClient();

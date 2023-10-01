@@ -2,9 +2,10 @@ package main
 
 import (
 	"context"
+
+	"github.com/apus-run/sea-kit/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"log"
 
 	pb "github.com/apus-run/gaia/examples/validate/api"
 	"github.com/apus-run/gaia/middleware/recovery"
@@ -47,8 +48,8 @@ func runGrpc() {
 
 	e, ok := status.FromError(err)
 	if ok && e.Code() == codes.InvalidArgument {
-		log.Printf("参数错误: %+v\n", e.Message())
+		log.Infof("参数错误: %+v\n", e.Message())
 	}
 
-	log.Printf("[grpc] TestValidate %+v\n", reply)
+	log.Infof("[grpc] TestValidate %+v\n", reply)
 }

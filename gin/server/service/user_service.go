@@ -2,7 +2,8 @@ package service
 
 import (
 	"context"
-	pb "github.com/apus-run/gaia/examples/http/gin/proto"
+
+	pb "github.com/apus-run/gaia/examples/gin/proto"
 )
 
 var (

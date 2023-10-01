@@ -4,13 +4,14 @@ import (
 	"context"
 	"fmt"
 	hp "net/http"
+	"os"
 
 	"github.com/apus-run/gaia"
 	pb "github.com/apus-run/gaia/examples/helloworld/api"
-	"github.com/apus-run/gaia/log"
 	"github.com/apus-run/gaia/middleware/recovery"
 	"github.com/apus-run/gaia/transport/grpc"
 	"github.com/apus-run/gaia/transport/http"
+	"github.com/apus-run/sea-kit/log"
 	"github.com/gin-gonic/gin"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -21,6 +22,8 @@ var (
 	Name = "helloworld"
 	// Version is the version of the compiled software.
 	Version = "v1.0.0"
+
+	id, _ = os.Hostname()
 )
 
 type User struct {
@@ -82,6 +85,14 @@ func NewEchoRouter() *echo.Echo {
 }
 
 func main() {
+	logger := log.With(log.NewStdLogger(os.Stdout),
+		"ts", log.DefaultTimestamp,
+		"caller", log.DefaultCaller,
+		"service.id", id,
+		"service.name", Name,
+		"service.version", Version,
+	)
+
 	s := &server{}
 
 	// grpc server
@@ -114,7 +125,7 @@ func main() {
 	app := gaia.New(
 		gaia.WithName(Name),
 		gaia.WithVersion(Version),
-		gaia.WithLogger(log.GetLogger()),
+		gaia.WithLogger(logger),
 		gaia.WithServer(
 			grpcServer,
 			httpServer,

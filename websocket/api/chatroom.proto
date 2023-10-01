@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package chatroom;
 
-option go_package = "api/chatroom/v1";
+option go_package = "github.com/apus-run/gaia/examples/websocket/api";
 
 service ChatRoom {
 }
